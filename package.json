@@ -1,0 +1,37 @@
+{
+  "name": "websocketmocker",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "babel src -d dist",
+    "start": "npm run build && node dist/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@babel/cli": "^7.13.0",
+    "@babel/core": "^7.13.8",
+    "@babel/plugin-transform-runtime": "^7.13.9",
+    "@babel/preset-env": "^7.13.9",
+    "babel-polyfill": "^6.26.0",
+    "express": "^4.17.1",
+    "http": "0.0.1-security",
+    "morgan": "^1.10.0",
+    "nodemon": "^2.0.7",
+    "rimraf": "^3.0.2",
+    "uuid": "^8.3.2",
+    "websocket": "^1.0.33"
+  },
+  "babel": {
+    "presets": [
+      "@babel/preset-env"
+    ],
+    "plugins": [
+      ["@babel/transform-runtime", {
+        "regenerator": true
+      }]
+    ]
+  }
+}

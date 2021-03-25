@@ -1,0 +1,85 @@
+let webSocketsServerPort = 8000;
+
+import { server as webSocketServer } from "websocket";
+import { createServer, httpServer } from "http";
+
+import { v4 } from "uuid";
+
+let serverContainers = new Array();
+let dataMockers = new Array();
+
+function serverContainer() {
+    server: httpServer;
+    wsServer: webSocketServer;
+    clients: {};
+};
+
+// This code generates unique userid for everyuser.
+const getUniqueID = () => {
+  return v4.getUniqueID();
+};
+
+//spin up 3 socket servers 8000, 8001, 8002
+let i = 0;
+for (i = 0; i < 3; i++) {
+
+  const servContainer = new serverContainer();
+  // Spinning the http server and the websocket server.
+/*
+  const httpserver = createServer();
+  httpserver.listen(webSocketsServerPort);
+  console.log(
+    "listening on port " + webSocketsServerPort
+  );
+
+  const wsServer = new webSocketServer({
+    httpServer: httpserver,
+  });
+
+  //const clients = {};
+  servContainer.clients = {};
+
+  wsServer.on("request", function (request) {
+    var userID = getUniqueID();
+    console.log(
+      new Date() +
+        " Recieved a new connection from origin " +
+        request.origin +
+        "."
+    );
+
+    // You can rewrite this part of the code to accept only the requests from allowed origin
+    const connection = request.accept(null, request.origin);
+    servContainer.clients[userID] = connection;
+    console.log(
+      "connected: " + userID + " in " + Object.getOwnPropertyNames(clients)
+    );
+
+    connection.on("message", function (message) {
+      if (message.type === "utf8") {
+        console.log("Received Message: ", message.utf8Data);
+
+        // broadcasting message to all connected clients
+        for (key in clients) {
+            servContainer.clients[key].sendUTF(message.utf8Data);
+          console.log("sent Message to: ", servContainer.clients[key]);
+        }
+      }
+    });
+  });
+
+  servContainer.Server = httpserver;
+  servContainer.wsServer = wsServer;
+
+  serverContainers.push(servContainer);
+  */
+
+    let mdata = require('./mockasync');
+    let mocker = new mdata(webSocketsServerPort, 10 );
+    //debugger;
+    
+    mocker.runMocker(2000, 25, i);
+    webSocketsServerPort = webSocketsServerPort + 1;
+  
+};
+

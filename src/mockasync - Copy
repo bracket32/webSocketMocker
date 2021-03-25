@@ -1,0 +1,57 @@
+
+export const getSmooth = async (numberMaint) => {
+    
+    //simulate pause
+    //let i = 0;
+    //while(i < 100000000) { i++; }
+
+    numberMaint = setTimeout((numberMaint) => {
+
+        let increment = numberMaint.increment;
+        let numbGen = numberMaint.numbGen;
+        const scale = numberMaint.scale
+    
+        if (increment && numbGen === scale) increment = false;
+        else if (!increment && numbGen === 0) increment = true;
+    
+        if (increment) numbGen = numbGen + 1;
+        else numbGen = numbGen - 1;
+    
+        numberMaint.numbGen = numbGen;
+        numberMaint.increment = increment;
+        return numberMaint;
+
+    }, 20000);
+  
+    return numberMaint;
+}
+
+function numberMaint(numbGen,increment,scale) {
+    this.numbGen = numbGen;
+    this.increment = increment;
+    this.scale = scale;
+  }
+
+export class mockData {
+
+    constructor(connectPort, scale) {
+        this.connectPort = connectPort;
+        this.numberTracker = new numberMaint(0, true, scale);
+      }
+
+    async runMock() {
+        let i = 0;
+        for (i = 0; i < 25; i++)
+        {
+            getSmooth(this.numberTracker).then(( resolve ) => {
+                this.numberTracker = resolve;  
+            })
+            console.log(this.connectPort + " " + this.numberTracker.numbGen + " ")
+        }
+
+        return "Done with " + this.numberTracker.connectPort;
+    }
+
+}
+
+module.exports = mockData;
