@@ -8,7 +8,6 @@ var _uuid = require("uuid");
 
 var webSocketsServerPort = 8000;
 var serverContainers = new Array();
-var dataMockers = new Array();
 
 function serverContainer() {
   server: _http.httpServer;
@@ -16,8 +15,6 @@ function serverContainer() {
   wsServer: _websocket.server;
 
   clients: {}
-
-  ;
 }
 
 ; // This code generates unique userid for everyuser.
@@ -35,8 +32,11 @@ var _loop = function _loop() {
 
   servContainer.clients = {};
   var httpserver = (0, _http.createServer)();
-  httpserver.listen(webSocketsServerPort);
-  console.log("listening on port " + webSocketsServerPort + " ip: " + httpserver.address());
+  httpserver.listen(webSocketsServerPort); //ut says youcan put in t a host ip
+  // httpserver.listen(webSocketsServerPort. "127.0.0.1");
+  //and then you'll get a value in address().address but when I do that it says its not listening an the httpserver.address() fails
+
+  console.log("listening on port " + httpserver.address().port + " ip: " + httpserver.address().address);
   var wsServer = new _websocket.server({
     httpServer: httpserver
   });
@@ -59,16 +59,17 @@ var _loop = function _loop() {
       }
     });
   });
-  servContainer.Server = httpserver;
+  servContainer.server = httpserver;
   servContainer.wsServer = wsServer;
   serverContainers.push(servContainer);
 
   var mdata = require('./mockasync'); //port 3000+n, maxvalue 
 
 
-  var mocker = new mdata(webSocketsServerPort, 80); //timout milliseconds, number of iterations
+  var mocker = new mdata(webSocketsServerPort, 80); //timout milliseconds, number of iterations, startat
 
-  mocker.runMocker(200, 1000, i);
+  var startAt = Math.floor(Math.random() * 100);
+  mocker.runMocker(200, 1000, startAt, mockerIsDone);
   webSocketsServerPort = webSocketsServerPort + 1;
 };
 
@@ -76,4 +77,17 @@ for (i = 0; i < 3; i++) {
   _loop();
 }
 
-; //to do how to return the whole program when done
+; //callback to shut down the server once the mocker is done
+
+function mockerIsDone(portNumber) {
+  serverContainers.forEach(function (item, index) {
+    debugger;
+
+    if (item.server.address() !== null && item.server.address().port == portNumber) {
+      console.log("mocker at" + portNumber + "is done");
+      item.server.close(); //once you close it, you cant find it again, so address() function is null
+    }
+  });
+}
+
+;

@@ -17,10 +17,25 @@ export class mockData {
         this.client = new W3CWebSocket('ws://127.0.0.1:'+ this.connectPort);
       }
 
+    //this puts the runMocker into a promise, so it can resolve when its done working...
+    /*
+    runMockerWithResolve = (secs, iterations, startat) => {
+      return new Promise((resolve) => {
+       
+        runMocker(secs, iterations, startat);
+        
+        return resolve({
+          success: this.connectPort,
+        })
+      })
+    }
+    */
+
+
     //this puts them in a stack and they all resolve at 2 secs
     //really the next one shoud be called when the current one resolved...
     //so put an await on the async resolve call and it will block until its ready for next
-    async runMocker(secs, iterations, startat)
+    async runMocker(secs, iterations, startat, done)
     {
         this.numberTracker.numbGen = startat;
         let i = 0;
@@ -39,7 +54,8 @@ export class mockData {
         //close when done
         //this client sends a close when its done
         //the main client should see that this is closed and shut down the socket
-        this.client.close(-1, 'completed.');
+        this.client.close(0, 'completed.');
+        done(this.connectPort);
     }
 
     resolveAfterNSeconds(secs, index) {

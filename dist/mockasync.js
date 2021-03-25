@@ -30,7 +30,21 @@ var mockData = /*#__PURE__*/function () {
     this.numberTracker = new numberMaint(0, true, scale); //attempt to find the socket
 
     this.client = new _websocket.w3cwebsocket('ws://127.0.0.1:' + this.connectPort);
-  } //this puts them in a stack and they all resolve at 2 secs
+  } //this puts the runMocker into a promise, so it can resolve when its done working...
+
+  /*
+  runMockerWithResolve = (secs, iterations, startat) => {
+    return new Promise((resolve) => {
+     
+      runMocker(secs, iterations, startat);
+      
+      return resolve({
+        success: this.connectPort,
+      })
+    })
+  }
+  */
+  //this puts them in a stack and they all resolve at 2 secs
   //really the next one shoud be called when the current one resolved...
   //so put an await on the async resolve call and it will block until its ready for next
 
@@ -38,7 +52,7 @@ var mockData = /*#__PURE__*/function () {
   (0, _createClass2["default"])(mockData, [{
     key: "runMocker",
     value: function () {
-      var _runMocker = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(secs, iterations, startat) {
+      var _runMocker = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee(secs, iterations, startat, done) {
         var i, result;
         return _regenerator["default"].wrap(function _callee$(_context) {
           while (1) {
@@ -74,9 +88,10 @@ var mockData = /*#__PURE__*/function () {
                 //close when done
                 //this client sends a close when its done
                 //the main client should see that this is closed and shut down the socket
-                this.client.close(-1, 'completed.');
+                this.client.close(0, 'completed.');
+                done(this.connectPort);
 
-              case 13:
+              case 14:
               case "end":
                 return _context.stop();
             }
@@ -84,7 +99,7 @@ var mockData = /*#__PURE__*/function () {
         }, _callee, this);
       }));
 
-      function runMocker(_x, _x2, _x3) {
+      function runMocker(_x, _x2, _x3, _x4) {
         return _runMocker.apply(this, arguments);
       }
 
